@@ -3,6 +3,7 @@ package com.motionvolt.carcare.domain.model;
 import java.time.LocalDate;
 
 public class TestDriveReservation {
+    
     private int centerId;
     private long kakaoUserId;
     private int carOptionId;
@@ -14,7 +15,7 @@ public class TestDriveReservation {
         this.kakaoUserId = kakaoUserId;
         this.carOptionId = carOptionId;
         this.reservationDate = reservationDate;
-        this.state = false;
+        this.state = true;
     }
 
     public int getCenterId() {

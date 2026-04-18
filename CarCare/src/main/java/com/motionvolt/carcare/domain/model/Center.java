@@ -1,31 +1,31 @@
 package com.motionvolt.carcare.domain.model;
 
 public class Center {
-    private int id;
-    private String name;
-    private String number;
+    private int centerId;
+    private String centerName;
+    private String phoneNumber;
     private String address;
 
     public Center() {
     }
 
-    public Center(int id, String name, String number, String address) {
-        this.id = id;
-        this.name = name;
-        this.number = number;
+    public Center(int centerId, String centerName, String phoneNumber, String address) {
+        this.centerId = centerId;
+        this.centerName = centerName;
+        this.phoneNumber = phoneNumber;
         this.address = address;
     }
 
-    public int getId() {
-        return id;
+    public int getCenterId() {
+        return centerId;
     }
 
-    public String getName() {
-        return name;
+    public String getCenterName() {
+        return centerName;
     }
 
-    public String getNumber() {
-        return number;
+    public String getPhoneNumber() {
+        return phoneNumber;
     }
 
     public String getAddress() {

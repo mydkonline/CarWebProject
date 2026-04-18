@@ -16,4 +16,5 @@ public class CarCareApplication extends SpringBootServletInitializer {
     protected SpringApplicationBuilder configure(SpringApplicationBuilder builder) {
         return builder.sources(CarCareApplication.class);
     }
+
 }

@@ -16,15 +16,16 @@ public interface AdminUseCase {
 
     List<DriveSchedule> searchDriveSchedules(String keyword);
 
-    DriveSchedule getDriveSchedule(int id);
+    DriveSchedule getDriveSchedule(int reservationId);
 
-    boolean updateDriveSchedule(int id, int carId, LocalDate date, String model, String name, DriveSchedule.States state);
+    boolean updateDriveSchedule(int reservationId, int optionId, LocalDate reservationDate, String modelName,
+                                String customerName, DriveSchedule.States state);
 
-    boolean deleteDriveSchedule(int id);
+    boolean deleteDriveSchedule(int reservationId);
 
     List<ProductOption> getProducts();
 
-    boolean deleteProductOption(int id);
+    boolean deleteProductOption(int optionId);
 
     int createBrand(String name);
 

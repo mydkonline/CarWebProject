@@ -1,10 +1,10 @@
 package com.motionvolt.carcare.domain.model;
 
 public class ProductOption {
-    private int id;
+    private int optionId;
     private int carId;
-    private String brand;
-    private String model;
+    private String brandName;
+    private String modelName;
     private String color;
     private int cc;
     private int km;
@@ -14,12 +14,12 @@ public class ProductOption {
     public ProductOption() {
     }
 
-    public ProductOption(int id, int carId, String brand, String model, String color, int cc, int km, double price,
+    public ProductOption(int optionId, int carId, String brandName, String modelName, String color, int cc, int km, double price,
                          String grade) {
-        this.id = id;
+        this.optionId = optionId;
         this.carId = carId;
-        this.brand = brand;
-        this.model = model;
+        this.brandName = brandName;
+        this.modelName = modelName;
         this.color = color;
         this.cc = cc;
         this.km = km;
@@ -27,20 +27,20 @@ public class ProductOption {
         this.grade = grade;
     }
 
-    public int getId() {
-        return id;
+    public int getOptionId() {
+        return optionId;
     }
 
     public int getCarId() {
         return carId;
     }
 
-    public String getBrand() {
-        return brand;
+    public String getBrandName() {
+        return brandName;
     }
 
-    public String getModel() {
-        return model;
+    public String getModelName() {
+        return modelName;
     }
 
     public String getColor() {

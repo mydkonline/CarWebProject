@@ -72,8 +72,8 @@ public class KakaoOAuthAdapter implements KakaoPort {
 
         Map properties = (Map) response.get("properties");
         String nickname = properties == null ? "" : String.valueOf(properties.get("nickname"));
-        long id = Long.parseLong(String.valueOf(response.get("id")));
+        long kakaoUserId = Long.parseLong(String.valueOf(response.get("id")));
         Instant connectedAt = Instant.parse(String.valueOf(response.get("connected_at")));
-        return new KakaoUser(id, nickname, connectedAt);
+        return new KakaoUser(kakaoUserId, nickname, connectedAt);
     }
 }

@@ -1,4 +1,4 @@
--- SPIKE: schema mirrors the legacy MySQL views while the app runs locally on H2 for reproducible demos.
+-- PostgreSQL schema used by the Spring Boot API. Use the local profile for an H2 demo database.
 DROP VIEW IF EXISTS drive_schedule_view;
 DROP VIEW IF EXISTS car_adminlist_view;
 DROP VIEW IF EXISTS car_option_view;
@@ -20,19 +20,19 @@ CREATE TABLE admin (
 );
 
 CREATE TABLE car_brands (
-    id INT AUTO_INCREMENT PRIMARY KEY,
+    id SERIAL PRIMARY KEY,
     name VARCHAR(80) NOT NULL UNIQUE
 );
 
 CREATE TABLE cars (
-    id INT AUTO_INCREMENT PRIMARY KEY,
+    id SERIAL PRIMARY KEY,
     car_brand_id INT NOT NULL,
     name VARCHAR(120) NOT NULL,
     CONSTRAINT fk_cars_brand FOREIGN KEY (car_brand_id) REFERENCES car_brands(id)
 );
 
 CREATE TABLE car_options (
-    id INT AUTO_INCREMENT PRIMARY KEY,
+    id SERIAL PRIMARY KEY,
     car_id INT NOT NULL,
     color VARCHAR(120) NOT NULL,
     cc INT NOT NULL,
@@ -43,7 +43,7 @@ CREATE TABLE car_options (
 );
 
 CREATE TABLE centers (
-    id INT AUTO_INCREMENT PRIMARY KEY,
+    id SERIAL PRIMARY KEY,
     name VARCHAR(120) NOT NULL,
     address VARCHAR(255) NOT NULL,
     number VARCHAR(40) NOT NULL
@@ -56,7 +56,7 @@ CREATE TABLE kakaouserinfos (
 );
 
 CREATE TABLE schedule_drive (
-    id INT AUTO_INCREMENT PRIMARY KEY,
+    id SERIAL PRIMARY KEY,
     center_id INT NOT NULL,
     kakaouser_id BIGINT NOT NULL,
     car_option_id INT NOT NULL,

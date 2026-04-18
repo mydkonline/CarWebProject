@@ -3,11 +3,11 @@ package com.motionvolt.carcare.domain.model;
 import java.time.LocalDate;
 
 public class DriveSchedule {
-    private int id;
-    private int carId;
-    private LocalDate date;
-    private String model;
-    private String name;
+    private int reservationId;
+    private int optionId;
+    private LocalDate reservationDate;
+    private String modelName;
+    private String customerName;
     private int cc;
     private String color;
     private String grade;
@@ -18,13 +18,13 @@ public class DriveSchedule {
     public DriveSchedule() {
     }
 
-    public DriveSchedule(int id, int carId, LocalDate date, String model, String name, int cc, String color,
+    public DriveSchedule(int reservationId, int optionId, LocalDate reservationDate, String modelName, String customerName, int cc, String color,
                          String grade, int km, double price, States state) {
-        this.id = id;
-        this.carId = carId;
-        this.date = date;
-        this.model = model;
-        this.name = name;
+        this.reservationId = reservationId;
+        this.optionId = optionId;
+        this.reservationDate = reservationDate;
+        this.modelName = modelName;
+        this.customerName = customerName;
         this.cc = cc;
         this.color = color;
         this.grade = grade;
@@ -33,24 +33,24 @@ public class DriveSchedule {
         this.state = state;
     }
 
-    public int getId() {
-        return id;
+    public int getReservationId() {
+        return reservationId;
     }
 
-    public int getCarId() {
-        return carId;
+    public int getOptionId() {
+        return optionId;
     }
 
-    public LocalDate getDate() {
-        return date;
+    public LocalDate getReservationDate() {
+        return reservationDate;
     }
 
-    public String getModel() {
-        return model;
+    public String getModelName() {
+        return modelName;
     }
 
-    public String getName() {
-        return name;
+    public String getCustomerName() {
+        return customerName;
     }
 
     public int getCc() {

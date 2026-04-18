@@ -50,28 +50,28 @@ public class AdminService implements AdminUseCase {
     public List<DriveSchedule> searchDriveSchedules(String keyword) {
         String normalized = keyword == null ? "" : keyword.toLowerCase();
         return getDriveSchedules().stream()
-                .filter(schedule -> schedule.getName() != null && schedule.getName().toLowerCase().contains(normalized))
+                .filter(schedule -> schedule.getCustomerName() != null && schedule.getCustomerName().toLowerCase().contains(normalized))
                 .collect(Collectors.toList());
     }
 
     @Override
     @Transactional(readOnly = true)
-    public DriveSchedule getDriveSchedule(int id) {
-        return adminPort.findDriveSchedule(id);
+    public DriveSchedule getDriveSchedule(int reservationId) {
+        return adminPort.findDriveSchedule(reservationId);
     }
 
     @Override
     @Transactional
-    public boolean updateDriveSchedule(int id, int carId, LocalDate date, String model, String name,
+    public boolean updateDriveSchedule(int reservationId, int optionId, LocalDate reservationDate, String modelName, String customerName,
                                        DriveSchedule.States state) {
-        DriveSchedule schedule = new DriveSchedule(id, carId, date, model, name, 0, null, null, 0, 0, state);
-        return adminPort.updateDriveSchedule(id, schedule) > 0;
+        DriveSchedule schedule = new DriveSchedule(reservationId, optionId, reservationDate, modelName, customerName, 0, null, null, 0, 0, state);
+        return adminPort.updateDriveSchedule(reservationId, schedule) > 0;
     }
 
     @Override
     @Transactional
-    public boolean deleteDriveSchedule(int id) {
-        return adminPort.deleteDriveSchedule(id) > 0;
+    public boolean deleteDriveSchedule(int reservationId) {
+        return adminPort.deleteDriveSchedule(reservationId) > 0;
     }
 
     @Override
@@ -82,8 +82,8 @@ public class AdminService implements AdminUseCase {
 
     @Override
     @Transactional
-    public boolean deleteProductOption(int id) {
-        return adminPort.deleteProductOption(id) > 0;
+    public boolean deleteProductOption(int optionId) {
+        return adminPort.deleteProductOption(optionId) > 0;
     }
 
     @Override

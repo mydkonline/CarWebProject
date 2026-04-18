@@ -8,8 +8,6 @@ import java.util.List;
 
 public interface CatalogPort {
     List<CarSummary> findCars();
-
     List<CarOption> findOptions(int carId);
-
     List<Center> findCenters();
 }

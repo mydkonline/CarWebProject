@@ -1,19 +1,19 @@
 package com.motionvolt.carcare.domain.model;
 
 public class SelectionOption {
-    private int id;
-    private String name;
+    private int selectionId;
+    private String selectionName;
 
-    public SelectionOption(int id, String name) {
-        this.id = id;
-        this.name = name;
+    public SelectionOption(int selectionId, String selectionName) {
+        this.selectionId = selectionId;
+        this.selectionName = selectionName;
     }
 
-    public int getId() {
-        return id;
+    public int getSelectionId() {
+        return selectionId;
     }
 
-    public String getName() {
-        return name;
+    public String getSelectionName() {
+        return selectionName;
     }
 }

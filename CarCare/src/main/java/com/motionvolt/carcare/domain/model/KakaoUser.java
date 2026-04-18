@@ -3,18 +3,18 @@ package com.motionvolt.carcare.domain.model;
 import java.time.Instant;
 
 public class KakaoUser {
-    private long id;
+    private long kakaoUserId;
     private String nickname;
     private Instant connectedAt;
 
-    public KakaoUser(long id, String nickname, Instant connectedAt) {
-        this.id = id;
+    public KakaoUser(long kakaoUserId, String nickname, Instant connectedAt) {
+        this.kakaoUserId = kakaoUserId;
         this.nickname = nickname;
         this.connectedAt = connectedAt;
     }
 
-    public long getId() {
-        return id;
+    public long getKakaoUserId() {
+        return kakaoUserId;
     }
 
     public String getNickname() {

@@ -9,6 +9,10 @@
 
 # Build
 build/
+target/
+
+# Local environment
+.env
 
 # Servers
 Servers/

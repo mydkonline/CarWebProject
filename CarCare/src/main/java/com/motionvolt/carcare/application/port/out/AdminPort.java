@@ -13,15 +13,15 @@ public interface AdminPort {
 
     List<DriveSchedule> findDriveSchedules();
 
-    DriveSchedule findDriveSchedule(int id);
+    DriveSchedule findDriveSchedule(int reservationId);
 
-    int updateDriveSchedule(int id, DriveSchedule schedule);
+    int updateDriveSchedule(int reservationId, DriveSchedule schedule);
 
-    int deleteDriveSchedule(int id);
+    int deleteDriveSchedule(int reservationId);
 
     List<ProductOption> findProducts();
 
-    int deleteProductOption(int id);
+    int deleteProductOption(int optionId);
 
     int createBrand(String name);
 

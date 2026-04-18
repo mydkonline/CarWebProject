@@ -1,0 +1,11 @@
+.git/
+.idea/
+.settings/
+target/
+build/
+bin/
+Servers/
+mobile/node_modules/
+mobile/.expo/
+mobile/dist/
+*.iml

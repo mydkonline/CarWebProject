@@ -21,7 +21,7 @@ public class KakaoLoginService implements KakaoLoginUseCase {
     @Transactional
     public KakaoUser login(String authorizationCode) {
         KakaoUser user = kakaoPort.fetchUser(authorizationCode);
-        if (!reservationPort.existsKakaoUser(user.getId())) {
+        if (!reservationPort.existsKakaoUser(user.getKakaoUserId())) {
             reservationPort.saveKakaoUser(user);
         }
         return user;
