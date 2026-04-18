@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>시승 예약 조회 | MotionVolt</title>
+    <link rel="stylesheet" th:href="@{/css/apple.css}">
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body>
+<div th:replace="fragments :: header"></div>
+<main class="mv-shell py-12">
+    <h1 class="text-4xl font-semibold">시승 예약 조회</h1>
+    <form class="mv-panel mt-8 max-w-xl p-6">
+        <input type="text" name="location" placeholder="시승 장소" class="w-full border p-3">
+        <input type="text" name="name" placeholder="이름" class="mt-4 w-full border p-3">
+        <input type="tel" name="phone" placeholder="연락처" class="mt-4 w-full border p-3">
+        <input type="email" name="email" placeholder="이메일" class="mt-4 w-full border p-3">
+        <button type="submit" class="mt-6 bg-black px-5 py-3 text-white">확인</button>
+    </form>
+</main>
+<div th:replace="fragments :: footer"></div>
+</body>
+</html>

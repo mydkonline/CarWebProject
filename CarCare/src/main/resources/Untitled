@@ -1,0 +1,2 @@
+cd /Users/desktop/CarWebProject/CarCare
+mvn spring-boot:run

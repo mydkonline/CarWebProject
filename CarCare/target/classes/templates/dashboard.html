@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard | MotionVolt</title>
+    <link rel="stylesheet" th:href="@{/css/apple.css}">
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body>
+<div class="min-h-screen lg:flex">
+    <aside class="border-r bg-white p-8 lg:w-72">
+        <a th:href="@{/admin/dashboard}"><img th:src="@{/img/logo/mainlogo.svg}" class="w-24" alt="MotionVolt"></a>
+        <p class="mt-8 text-2xl font-semibold"><span th:text="${userRole ?: 'admin'}">admin</span> 님</p>
+        <nav class="mt-8 grid gap-3 text-sm">
+            <a th:href="@{/admin/reservations}">예약 조회 및 관리</a>
+            <a th:href="@{/admin/products}">등록된 차량 조회</a>
+            <a th:href="@{/admin/products/new}">자동차 상품 등록</a>
+        </nav>
+    </aside>
+    <main class="flex-1 p-8">
+        <p th:if="${message}" th:text="${message}" class="mb-5 rounded-lg bg-black p-3 text-white">message</p>
+        <section th:if="${list == null and ModifyList == null and prdList == null and brandList == null}" class="grid gap-5 md:grid-cols-3">
+            <div class="mv-panel p-6">
+                <h2 class="text-xl font-semibold">자동차 리스트</h2>
+                <p class="mt-3 text-sm text-gray-600">등록된 모델과 옵션을 관리하세요.</p>
+            </div>
+            <div class="mv-panel p-6">
+                <h2 class="text-xl font-semibold">예약 조회수</h2>
+                <p class="mt-3 text-sm text-gray-600">시승 예약 현황을 확인하세요.</p>
+            </div>
+            <div class="mv-panel p-6">
+                <h2 class="text-xl font-semibold">최신 인기 모델</h2>
+                <img th:src="@{/img/carList/LS500h.png}" class="mt-4 h-28 object-contain" alt="LS500h">
+            </div>
+        </section>
+
+        <section th:if="${list != null}">
+            <h1 class="text-3xl font-semibold">예약 대기중</h1>
+            <form th:action="@{/admin/reservations/search}" method="post" class="my-5 flex gap-2">
+                <input type="text" name="search" placeholder="신청자 이름 검색" class="w-full max-w-sm border p-3">
+                <button type="submit" class="bg-black px-5 text-white">검색</button>
+            </form>
+            <div class="mv-panel overflow-x-auto">
+                <table class="w-full min-w-[920px] text-sm">
+                    <thead class="bg-black text-white">
+                    <tr>
+                        <th class="p-3">예약번호</th><th>날짜</th><th>모델</th><th>신청자</th><th>CC</th><th>색상</th><th>등급</th><th>KM</th><th>가격</th><th>상태</th><th>관리</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="drive : ${filteredList != null ? filteredList : list}" class="border-t text-center">
+                        <td class="p-3" th:text="${drive.id}">1</td>
+                        <td th:text="${drive.date}">date</td>
+                        <td th:text="${drive.model}">model</td>
+                        <td th:text="${drive.name}">name</td>
+                        <td th:text="${drive.cc}">cc</td>
+                        <td th:text="${drive.color}">color</td>
+                        <td th:text="${drive.grade}">grade</td>
+                        <td th:text="${drive.km}">km</td>
+                        <td th:text="${drive.price}">price</td>
+                        <td th:text="${drive.state}">state</td>
+                        <td class="p-3">
+                            <div class="flex justify-center gap-2">
+                                <form th:action="@{/admin/reservations/{id}/edit(id=${drive.id})}" method="get">
+                                    <button class="rounded-lg bg-blue-600 px-3 py-1 text-white">수정</button>
+                                </form>
+                                <form th:action="@{/admin/reservations/{id}/delete(id=${drive.id})}" method="post">
+                                    <button class="rounded-lg bg-red-600 px-3 py-1 text-white">삭제</button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <section th:if="${ModifyList != null}" class="mv-panel max-w-xl p-6">
+            <h1 class="text-3xl font-semibold">예약 관리</h1>
+            <form th:action="@{/admin/reservations/{id}(id=${ModifyList.id})}" method="post" class="mt-6 grid gap-4">
+                <input type="text" name="id" th:value="${ModifyList.id}" readonly class="border p-3">
+                <input type="date" name="date" th:value="${ModifyList.date}" class="border p-3">
+                <input type="number" name="carId" th:value="${ModifyList.carId}" class="border p-3">
+                <input type="text" name="model" th:value="${ModifyList.model}" readonly class="border p-3">
+                <input type="text" name="name" th:value="${ModifyList.name}" readonly class="border p-3">
+                <select name="state" class="border p-3">
+                    <option value="RESERVED" th:selected="${ModifyList.state.name() == 'RESERVED'}">RESERVED</option>
+                    <option value="FAILED" th:selected="${ModifyList.state.name() == 'FAILED'}">FAILED</option>
+                </select>
+                <button class="bg-black px-5 py-3 text-white">수정</button>
+            </form>
+        </section>
+
+        <section th:if="${prdList != null}">
+            <h1 class="text-3xl font-semibold">등록된 상품 목록</h1>
+            <div class="mv-panel mt-6 overflow-x-auto">
+                <table class="w-full min-w-[760px] text-sm">
+                    <thead class="bg-black text-white">
+                    <tr><th class="p-3">브랜드</th><th>모델</th><th>색상</th><th>CC</th><th>KM</th><th>가격</th><th>등급</th><th>관리</th></tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="item : ${prdList}" class="border-t text-center">
+                        <td class="p-3" th:text="${item.brand}">brand</td>
+                        <td th:text="${item.model}">model</td>
+                        <td th:text="${item.color}">color</td>
+                        <td th:text="${item.cc}">cc</td>
+                        <td th:text="${item.km}">km</td>
+                        <td th:text="${item.price}">price</td>
+                        <td th:text="${item.grade}">grade</td>
+                        <td>
+                            <form th:action="@{/admin/products/{id}/delete(id=${item.id})}" method="post">
+                                <button class="rounded-lg bg-red-600 px-3 py-1 text-white">삭제</button>
+                            </form>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <section th:if="${brandList != null}" class="grid gap-6 xl:grid-cols-3">
+            <form th:action="@{/admin/brands}" method="post" class="mv-panel p-6">
+                <h2 class="text-2xl font-semibold">브랜드 등록</h2>
+                <input type="text" name="name" placeholder="브랜드명" required class="mt-5 w-full border p-3">
+                <button class="mt-4 bg-black px-5 py-3 text-white">등록</button>
+            </form>
+            <form th:action="@{/admin/models}" method="post" class="mv-panel p-6">
+                <h2 class="text-2xl font-semibold">모델 등록</h2>
+                <select name="carBrandId" required class="mt-5 w-full border p-3">
+                    <option value="">브랜드 선택</option>
+                    <option th:each="brand : ${brandList}" th:value="${brand.id}" th:text="${brand.name}">brand</option>
+                </select>
+                <input type="text" name="name" placeholder="모델명" required class="mt-4 w-full border p-3">
+                <button class="mt-4 bg-black px-5 py-3 text-white">등록</button>
+            </form>
+            <form th:action="@{/admin/options}" method="post" class="mv-panel p-6">
+                <h2 class="text-2xl font-semibold">옵션 등록</h2>
+                <select name="carId" required class="mt-5 w-full border p-3">
+                    <option th:each="model : ${modelList}" th:value="${model.id}" th:text="${model.name}">model</option>
+                </select>
+                <input type="text" name="color" placeholder="색상" required class="mt-4 w-full border p-3">
+                <input type="number" name="cc" placeholder="CC" required class="mt-4 w-full border p-3">
+                <input type="number" name="km" placeholder="KM" required class="mt-4 w-full border p-3">
+                <input type="number" name="price" placeholder="가격" required class="mt-4 w-full border p-3">
+                <input type="text" name="grade" placeholder="등급" required class="mt-4 w-full border p-3">
+                <button class="mt-4 bg-black px-5 py-3 text-white">등록</button>
+            </form>
+        </section>
+    </main>
+</div>
+</body>
+</html>

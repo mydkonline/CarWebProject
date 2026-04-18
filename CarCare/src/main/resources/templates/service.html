@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Service | MotionVolt</title>
+    <link rel="stylesheet" th:href="@{/css/apple.css}">
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body>
+<div th:replace="fragments :: header"></div>
+<main>
+    <section class="relative min-h-[620px] overflow-hidden bg-black text-white">
+        <img th:src="@{/img/service/service-image.png}" class="absolute inset-0 h-full w-full object-cover opacity-70" alt="Service">
+        <div class="mv-shell relative z-10 pt-24">
+            <p class="mv-section-eyebrow text-white/80">SERVICE</p>
+            <h1 class="mt-4 max-w-2xl text-5xl font-semibold">하나의 앱으로, 시승부터 스마트 케어까지.</h1>
+        </div>
+    </section>
+    <section class="mv-shell grid gap-6 py-16 md:grid-cols-3">
+        <article class="mv-panel p-6">
+            <img th:src="@{/img/service/sec2-1png.png}" class="h-44 w-full object-contain" alt="Care">
+            <h2 class="mt-4 text-2xl font-semibold">내 차 관리</h2>
+            <p class="mt-2 text-sm text-gray-600">정비 주기와 서비스 이력을 한눈에 확인하세요.</p>
+        </article>
+        <article class="mv-panel p-6">
+            <img th:src="@{/img/service/sec3-1png.png}" class="h-44 w-full object-contain" alt="Reservation">
+            <h2 class="mt-4 text-2xl font-semibold">서비스 예약</h2>
+            <p class="mt-2 text-sm text-gray-600">가까운 센터를 선택하고 간편하게 예약하세요.</p>
+        </article>
+        <article class="mv-panel p-6">
+            <img th:src="@{/img/service/sec4-2png.png}" class="h-44 w-full object-contain" alt="Drive">
+            <h2 class="mt-4 text-2xl font-semibold">시승 신청</h2>
+            <p class="mt-2 text-sm text-gray-600">모델과 날짜를 선택해 바로 신청하세요.</p>
+        </article>
+    </section>
+</main>
+<div th:replace="fragments :: footer"></div>
+</body>
+</html>

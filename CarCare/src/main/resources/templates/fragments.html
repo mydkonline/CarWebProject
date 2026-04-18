@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<body>
+<header th:fragment="header">
+    <nav class="mv-nav">
+        <div class="mv-shell mv-nav-inner">
+            <a th:href="@{/main}" class="flex items-center">
+                <img th:src="@{/img/logo/mainlogo.png}" alt="MotionVolt Logo" class="h-14 w-14">
+            </a>
+            <div class="mv-nav-links">
+                <a th:href="@{/cars}">모델</a>
+                <a th:href="@{/cars}">시승 신청</a>
+                <a th:href="@{/service}">서비스</a>
+                <a th:href="@{/brand}">브랜드</a>
+            </div>
+            <div class="mv-nav-sub">
+                <a href="#">공지사항</a>
+                <a th:href="@{/customer-service}">고객센터</a>
+                <a th:href="@{/admin/login}">관리자</a>
+            </div>
+        </div>
+    </nav>
+</header>
+
+<footer th:fragment="footer">
+    <div class="mv-footer">
+        <div class="mv-shell">
+            <div class="flex flex-wrap items-center gap-4">
+                <strong>MotionVolt</strong>
+                <span class="text-sm text-gray-300">모션볼트 모터 코리아</span>
+                <div class="ml-auto flex gap-4">
+                    <a href="https://www.facebook.com/">Facebook</a>
+                    <a href="https://www.instagram.com">Instagram</a>
+                    <a href="https://www.youtube.com">YouTube</a>
+                    <a href="https://twitter.com">Twitter</a>
+                </div>
+            </div>
+            <div class="mt-6 flex flex-wrap gap-6 text-xs text-gray-300">
+                <span>문의하기</span>
+                <span>개인정보처리방침</span>
+                <span>이용약관</span>
+                <span>서비스예약</span>
+                <span class="ml-auto">© MotionVolt MOTOR KOREA All rights Reserved</span>
+            </div>
+        </div>
+    </div>
+</footer>
+</body>
+</html>

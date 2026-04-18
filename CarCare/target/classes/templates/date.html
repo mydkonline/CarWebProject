@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Date | MotionVolt</title>
+    <link rel="stylesheet" th:href="@{/css/apple.css}">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script th:src="@{/js/date.js}" defer></script>
+</head>
+<body>
+<div th:replace="fragments :: header"></div>
+<main class="mv-shell py-12">
+    <p class="mv-section-eyebrow">시승 일정</p>
+    <h1 class="mt-2 text-4xl font-semibold">시승 날짜를 선택하세요.</h1>
+    <form id="datePost" th:action="@{/reservations/start}" method="post" class="mv-panel mt-8 max-w-md p-6">
+        <input type="hidden" name="id" th:value="${id}">
+        <input type="hidden" name="optionId" th:value="${optionId}">
+        <input type="date" name="date" required class="w-full border p-3">
+        <button type="submit" class="mv-button mt-4 w-full bg-black px-5 py-3 text-white">다음</button>
+    </form>
+</main>
+<div th:replace="fragments :: footer"></div>
+</body>
+</html>

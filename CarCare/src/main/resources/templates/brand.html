@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Brand | MotionVolt</title>
+    <link rel="stylesheet" th:href="@{/css/apple.css}">
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body>
+<div th:replace="fragments :: header"></div>
+<main>
+    <section class="relative min-h-[520px] overflow-hidden">
+        <img th:src="@{/img/brand/keyvisual-w_1.png}" class="h-[520px] w-full object-cover" alt="Brand">
+        <div class="absolute left-10 top-24 max-w-2xl text-white">
+            <p class="mv-section-eyebrow text-white/80">BRAND PHILOSOPHY</p>
+            <h1 class="mt-4 text-5xl font-semibold">한국의 일상에 맞춘 프리미엄 모빌리티.</h1>
+        </div>
+    </section>
+    <section class="mv-shell py-16 text-center">
+        <h2 class="text-3xl font-semibold">미래에 대한 우리의 비전</h2>
+        <p class="mx-auto mt-5 max-w-3xl text-gray-600">MotionVolt는 이동의 자유와 지속 가능한 에너지를 중심으로 새로운 모빌리티 경험을 만듭니다.</p>
+        <img th:src="@{/img/brand/vision_oginal_2.png}" class="mt-10 w-full rounded-lg object-cover" alt="Vision">
+    </section>
+</main>
+<div th:replace="fragments :: footer"></div>
+</body>
+</html>

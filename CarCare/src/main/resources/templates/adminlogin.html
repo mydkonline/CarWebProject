@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Login | MotionVolt</title>
+    <link rel="stylesheet" th:href="@{/css/apple.css}">
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body>
+<main class="flex min-h-screen items-center justify-center p-6">
+    <form th:action="@{/admin/login}" method="post" class="mv-panel w-full max-w-md p-8">
+        <p class="text-sm text-gray-500">MotionVolt Admin</p>
+        <h1 class="mt-2 text-3xl font-semibold">관리자 로그인</h1>
+        <label class="mt-8 block text-sm font-medium" for="username">아이디</label>
+        <input id="username" name="username" type="text" required class="mt-2 w-full border p-3">
+        <label class="mt-4 block text-sm font-medium" for="password">비밀번호</label>
+        <input id="password" name="password" type="password" required class="mt-2 w-full border p-3">
+        <button type="submit" class="mv-button mt-6 w-full bg-black px-5 py-3 text-white">로그인</button>
+    </form>
+</main>
+</body>
+</html>
