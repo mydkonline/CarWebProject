@@ -72,18 +72,7 @@ src/main/resources/static
 │   │           ├── schema.sql
 │   │           └── data.sql
 ```
-# 프로젝트 정보
-진행 단체 : 영남직업기술개발원
-<br>
-프로젝트 목적 : 시승신청 예약관리 사이트 개발
-<br>
-개발 기간 : 2023-11-22 ~ 2023-12-21
-<br>
-# 팀 소개
-<br>
-<img src="https://github.com/mydkonline/CarWebProject/assets/67779682/bd5ab885-0daf-4a54-8ee3-c611210ce4b5" alt="프로필 이미지" width="100" height="100">
-<br>
-박승현
+
 
 # 프로젝트 소개
 ## 서비스 목적
