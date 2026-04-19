@@ -61,6 +61,17 @@ export default function App() {
   const [adminSummary, setAdminSummary] = useState(null);
   const [adminReservations, setAdminReservations] = useState([]);
   const [adminProducts, setAdminProducts] = useState([]);
+  const [adminBrands, setAdminBrands] = useState([]);
+  const [adminModels, setAdminModels] = useState([]);
+  const [brandName, setBrandName] = useState('');
+  const [modelBrandId, setModelBrandId] = useState(null);
+  const [modelName, setModelName] = useState('');
+  const [optionCarId, setOptionCarId] = useState(null);
+  const [optionGrade, setOptionGrade] = useState('');
+  const [optionColor, setOptionColor] = useState('');
+  const [optionCc, setOptionCc] = useState('');
+  const [optionKm, setOptionKm] = useState('');
+  const [optionPrice, setOptionPrice] = useState('');
   const [adminLoading, setAdminLoading] = useState(false);
   const [adminFeedback, setAdminFeedback] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -244,14 +255,75 @@ export default function App() {
   async function loadAdminDashboard() {
     setAdminLoading(true);
     try {
-      const [summary, reservations, products] = await Promise.all([
+      const [summary, reservations, products, brands, models] = await Promise.all([
         fetchJson('/api/admin/summary'),
         fetchJson('/api/admin/reservations'),
         fetchJson('/api/admin/products'),
+        fetchJson('/api/admin/brands'),
+        fetchJson('/api/admin/models'),
       ]);
       setAdminSummary(summary);
       setAdminReservations(reservations);
       setAdminProducts(products);
+      setAdminBrands(brands);
+      setAdminModels(models);
+      setModelBrandId((current) => current ?? brands[0]?.selectionId ?? brands[0]?.id ?? null);
+      setOptionCarId((current) => current ?? models[0]?.selectionId ?? models[0]?.id ?? null);
+    } catch (error) {
+      setAdminFeedback({type: 'error', message: error.message});
+    } finally {
+      setAdminLoading(false);
+    }
+  }
+
+  async function createBrand() {
+    if (!brandName.trim()) {
+      setAdminFeedback({type: 'error', message: '브랜드명을 입력해 주세요.'});
+      return;
+    }
+    await submitAdminCreate('/api/admin/brands', {name: brandName.trim()}, () => setBrandName(''));
+  }
+
+  async function createModel() {
+    if (!modelBrandId || !modelName.trim()) {
+      setAdminFeedback({type: 'error', message: '브랜드와 모델명을 선택해 주세요.'});
+      return;
+    }
+    await submitAdminCreate('/api/admin/models', {brandId: modelBrandId, name: modelName.trim()}, () => setModelName(''));
+  }
+
+  async function createVehicleOption() {
+    if (!optionCarId || !optionGrade.trim() || !optionColor.trim() || !optionPrice.trim()) {
+      setAdminFeedback({type: 'error', message: '모델, 트림, 색상, 가격을 입력해 주세요.'});
+      return;
+    }
+    await submitAdminCreate('/api/admin/vehicle-options', {
+      carId: optionCarId,
+      color: optionColor.trim(),
+      cc: parseNumber(optionCc),
+      km: parseNumber(optionKm),
+      price: parseNumber(optionPrice),
+      grade: optionGrade.trim(),
+    }, () => {
+      setOptionGrade('');
+      setOptionColor('');
+      setOptionCc('');
+      setOptionKm('');
+      setOptionPrice('');
+    });
+  }
+
+  async function submitAdminCreate(path, payload, resetForm) {
+    setAdminLoading(true);
+    setAdminFeedback({type: 'info', message: '운영 데이터를 저장하고 있습니다.'});
+    try {
+      const result = await fetchJson(path, {
+        method: 'POST',
+        body: JSON.stringify(payload),
+      });
+      resetForm();
+      setAdminFeedback({type: 'success', message: result.message});
+      await loadAdminDashboard();
     } catch (error) {
       setAdminFeedback({type: 'error', message: error.message});
     } finally {
@@ -288,7 +360,7 @@ export default function App() {
 
         <View style={styles.contentWrap}>
           <ModeSwitch viewMode={viewMode} onChange={setViewMode} />
-          <ResourceShowcase isWide={isWide} />
+          {viewMode === 'booking' && <ResourceShowcase isWide={isWide} />}
 
           {viewMode === 'admin' ? (
             <AdminDashboard
@@ -299,13 +371,36 @@ export default function App() {
               summary={adminSummary}
               reservations={adminReservations}
               products={adminProducts}
+              brands={adminBrands}
+              models={adminModels}
+              brandName={brandName}
+              modelBrandId={modelBrandId}
+              modelName={modelName}
+              optionCarId={optionCarId}
+              optionGrade={optionGrade}
+              optionColor={optionColor}
+              optionCc={optionCc}
+              optionKm={optionKm}
+              optionPrice={optionPrice}
               loading={adminLoading}
               feedback={adminFeedback}
               onUsernameChange={setAdminUsername}
               onPasswordChange={setAdminPassword}
+              onBrandNameChange={setBrandName}
+              onModelBrandChange={setModelBrandId}
+              onModelNameChange={setModelName}
+              onOptionCarChange={setOptionCarId}
+              onOptionGradeChange={setOptionGrade}
+              onOptionColorChange={setOptionColor}
+              onOptionCcChange={setOptionCc}
+              onOptionKmChange={setOptionKm}
+              onOptionPriceChange={setOptionPrice}
               onLogin={loginAdmin}
               onRefresh={loadAdminDashboard}
               onUpdateState={updateReservationState}
+              onCreateBrand={createBrand}
+              onCreateModel={createModel}
+              onCreateVehicleOption={createVehicleOption}
             />
           ) : loading ? (
             <LoadingState />
@@ -489,13 +584,36 @@ function AdminDashboard({
   summary,
   reservations,
   products,
+  brands,
+  models,
+  brandName,
+  modelBrandId,
+  modelName,
+  optionCarId,
+  optionGrade,
+  optionColor,
+  optionCc,
+  optionKm,
+  optionPrice,
   loading,
   feedback,
   onUsernameChange,
   onPasswordChange,
+  onBrandNameChange,
+  onModelBrandChange,
+  onModelNameChange,
+  onOptionCarChange,
+  onOptionGradeChange,
+  onOptionColorChange,
+  onOptionCcChange,
+  onOptionKmChange,
+  onOptionPriceChange,
   onLogin,
   onRefresh,
   onUpdateState,
+  onCreateBrand,
+  onCreateModel,
+  onCreateVehicleOption,
 }) {
   if (!loggedIn) {
     return (
@@ -540,6 +658,34 @@ function AdminDashboard({
         <MetricCard label="운영 트림" value={formatCount(summary?.productCount ?? 0)} />
       </View>
 
+      <AdminCreatePanel
+        isWide={isWide}
+        brands={brands}
+        models={models}
+        brandName={brandName}
+        modelBrandId={modelBrandId}
+        modelName={modelName}
+        optionCarId={optionCarId}
+        optionGrade={optionGrade}
+        optionColor={optionColor}
+        optionCc={optionCc}
+        optionKm={optionKm}
+        optionPrice={optionPrice}
+        loading={loading}
+        onBrandNameChange={onBrandNameChange}
+        onModelBrandChange={onModelBrandChange}
+        onModelNameChange={onModelNameChange}
+        onOptionCarChange={onOptionCarChange}
+        onOptionGradeChange={onOptionGradeChange}
+        onOptionColorChange={onOptionColorChange}
+        onOptionCcChange={onOptionCcChange}
+        onOptionKmChange={onOptionKmChange}
+        onOptionPriceChange={onOptionPriceChange}
+        onCreateBrand={onCreateBrand}
+        onCreateModel={onCreateModel}
+        onCreateVehicleOption={onCreateVehicleOption}
+      />
+
       <View style={[styles.adminColumns, isWide && styles.adminColumnsWide]}>
         <View style={styles.adminColumn}>
           <Text style={styles.summaryLabel}>예약 목록</Text>
@@ -553,7 +699,7 @@ function AdminDashboard({
         </View>
         <View style={styles.adminColumn}>
           <Text style={styles.summaryLabel}>차량 옵션</Text>
-          {products.slice(0, 8).map((product) => (
+          {products.map((product) => (
             <ProductCard key={product.optionId} product={product} />
           ))}
         </View>
@@ -567,6 +713,157 @@ function MetricCard({label, value}) {
     <View style={styles.metricCard}>
       <Text style={styles.metricValue}>{value}</Text>
       <Text style={styles.metricLabel}>{label}</Text>
+    </View>
+  );
+}
+
+function AdminCreatePanel({
+  isWide,
+  brands = [],
+  models = [],
+  brandName,
+  modelBrandId,
+  modelName,
+  optionCarId,
+  optionGrade,
+  optionColor,
+  optionCc,
+  optionKm,
+  optionPrice,
+  loading,
+  onBrandNameChange,
+  onModelBrandChange,
+  onModelNameChange,
+  onOptionCarChange,
+  onOptionGradeChange,
+  onOptionColorChange,
+  onOptionCcChange,
+  onOptionKmChange,
+  onOptionPriceChange,
+  onCreateBrand,
+  onCreateModel,
+  onCreateVehicleOption,
+}) {
+  return (
+    <View style={styles.adminCreatePanel}>
+      <View style={styles.sectionHeader}>
+        <Text style={styles.summaryLabel}>차량 데이터 생성</Text>
+        <Text style={styles.stageSubtitle}>브랜드, 모델, 트림 옵션을 관리자 화면에서 분리해서 등록합니다.</Text>
+      </View>
+
+      <View style={[styles.adminCreateGrid, isWide && styles.adminCreateGridWide]}>
+        <View style={styles.createBox}>
+          <Text style={styles.createTitle}>브랜드 생성</Text>
+          <View style={styles.createBody}>
+            <AdminField label="브랜드명">
+              <TextInput
+                value={brandName}
+                onChangeText={onBrandNameChange}
+                style={styles.adminTextInput}
+                placeholder="예: MotionVolt"
+                returnKeyType="done"
+              />
+            </AdminField>
+          </View>
+          <Pressable onPress={onCreateBrand} disabled={loading} style={[styles.secondaryButton, loading && styles.disabledOutlineButton]}>
+            <Text style={styles.secondaryButtonText}>브랜드 저장</Text>
+          </Pressable>
+        </View>
+
+        <View style={styles.createBox}>
+          <Text style={styles.createTitle}>모델 생성</Text>
+          <View style={styles.createBody}>
+            <ChoiceList
+              items={brands}
+              selectedId={modelBrandId}
+              onSelect={onModelBrandChange}
+              emptyText="브랜드를 먼저 생성하세요."
+            />
+            <AdminField label="모델명">
+              <TextInput
+                value={modelName}
+                onChangeText={onModelNameChange}
+                style={styles.adminTextInput}
+                placeholder="예: EV9 GT Line"
+                returnKeyType="done"
+              />
+            </AdminField>
+          </View>
+          <Pressable onPress={onCreateModel} disabled={loading || brands.length === 0} style={[styles.secondaryButton, (loading || brands.length === 0) && styles.disabledOutlineButton]}>
+            <Text style={styles.secondaryButtonText}>모델 저장</Text>
+          </Pressable>
+        </View>
+
+        <View style={styles.createBox}>
+          <Text style={styles.createTitle}>트림 옵션 생성</Text>
+          <View style={styles.createBody}>
+            <ChoiceList
+              items={models}
+              selectedId={optionCarId}
+              onSelect={onOptionCarChange}
+              emptyText="모델을 먼저 생성하세요."
+            />
+            <View style={styles.formRow}>
+              <AdminField label="트림명" style={styles.formInput}>
+                <TextInput value={optionGrade} onChangeText={onOptionGradeChange} style={styles.adminTextInput} placeholder="예: Signature" />
+              </AdminField>
+              <AdminField label="색상" style={styles.formInput}>
+                <TextInput value={optionColor} onChangeText={onOptionColorChange} style={styles.adminTextInput} placeholder="예: Uyuni White" />
+              </AdminField>
+            </View>
+            <View style={styles.formRow}>
+              <AdminField label="배기량" unit="cc" style={styles.formInput}>
+                <TextInput value={optionCc} onChangeText={onOptionCcChange} style={[styles.adminTextInput, styles.unitInput]} placeholder="0" keyboardType="number-pad" />
+              </AdminField>
+              <AdminField label="연비" unit="km/L" style={styles.formInput}>
+                <TextInput value={optionKm} onChangeText={onOptionKmChange} style={[styles.adminTextInput, styles.unitInput]} placeholder="0" keyboardType="number-pad" />
+              </AdminField>
+              <AdminField label="가격" unit="만원" style={styles.formInput}>
+                <TextInput value={optionPrice} onChangeText={onOptionPriceChange} style={[styles.adminTextInput, styles.unitInput]} placeholder="8900" keyboardType="number-pad" />
+              </AdminField>
+            </View>
+          </View>
+          <Pressable onPress={onCreateVehicleOption} disabled={loading || models.length === 0} style={[styles.secondaryButton, (loading || models.length === 0) && styles.disabledOutlineButton]}>
+            <Text style={styles.secondaryButtonText}>트림 저장</Text>
+          </Pressable>
+        </View>
+      </View>
+    </View>
+  );
+}
+
+function AdminField({label, unit, style, children}) {
+  return (
+    <View style={[styles.fieldGroup, style]}>
+      <Text style={styles.fieldLabel}>{label}</Text>
+      <View style={unit ? styles.unitInputWrap : null}>
+        {children}
+        {unit && <Text style={styles.unitText}>{unit}</Text>}
+      </View>
+    </View>
+  );
+}
+
+function ChoiceList({items = [], selectedId, onSelect, emptyText}) {
+  if (items.length === 0) {
+    return <Text style={styles.choiceEmpty}>{emptyText}</Text>;
+  }
+
+  return (
+    <View style={styles.choiceGrid}>
+      {items.map((item) => {
+        const itemId = item.id ?? item.selectionId;
+        const itemName = item.name ?? item.selectionName;
+        const selected = selectedId === itemId;
+        return (
+          <Pressable
+            key={itemId}
+            onPress={() => onSelect(itemId)}
+            style={[styles.choiceButton, selected && styles.choiceButtonActive]}>
+            <Text style={[styles.choiceButtonText, selected && styles.choiceButtonTextActive]}>{itemName}</Text>
+          </Pressable>
+        );
+      })}
     </View>
   );
 }
@@ -587,7 +884,7 @@ function AdminReservationCard({reservation, onUpdateState}) {
         </View>
       </View>
       <Text style={styles.cardText}>
-        {reservation.grade} · {reservation.color} · {formatEfficiency(reservation.km)}
+        {reservation.grade} · {reservation.color} · {formatCc(reservation.cc)} · {formatEfficiency(reservation.km)}
       </Text>
       <View style={styles.adminActionRow}>
         <Pressable
@@ -612,6 +909,7 @@ function ProductCard({product}) {
       <Text style={styles.cardMeta}>{product.brandName} · {product.grade}</Text>
       <View style={styles.specRow}>
         <Spec label="색상" value={product.color} />
+        <Spec label="배기량" value={formatCc(product.cc)} />
         <Spec label="연비" value={formatEfficiency(product.km)} />
         <Spec label="가격" value={formatKoreanPrice(product.price)} />
       </View>
@@ -848,6 +1146,11 @@ function formatKoreanPrice(value) {
 
 function formatNumber(value) {
   return new Intl.NumberFormat('ko-KR').format(Number(value) || 0);
+}
+
+function parseNumber(value) {
+  const parsed = Number(String(value).replace(/,/g, '').trim());
+  return Number.isFinite(parsed) ? parsed : 0;
 }
 
 const styles = StyleSheet.create({
@@ -1096,6 +1399,7 @@ const styles = StyleSheet.create({
   },
   specRow: {
     flexDirection: 'row',
+    flexWrap: 'wrap',
     gap: 8,
     marginTop: 14,
   },
@@ -1103,6 +1407,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#F5F5F7',
     borderRadius: 8,
     flex: 1,
+    minWidth: 88,
     padding: 10,
   },
   specLabel: {
@@ -1228,6 +1533,19 @@ const styles = StyleSheet.create({
     paddingHorizontal: 14,
     paddingVertical: 13,
   },
+  adminTextInput: {
+    borderColor: '#D2D2D7',
+    borderRadius: 8,
+    borderWidth: 1,
+    color: '#1D1D1F',
+    fontSize: 15,
+    minHeight: 46,
+    paddingHorizontal: 12,
+    paddingVertical: 11,
+  },
+  unitInput: {
+    paddingRight: 54,
+  },
   confirmBox: {
     backgroundColor: '#F5F5F7',
     borderRadius: 8,
@@ -1346,6 +1664,119 @@ const styles = StyleSheet.create({
   },
   adminColumnsWide: {
     flexDirection: 'row',
+  },
+  adminCreatePanel: {
+    backgroundColor: '#FBFBFD',
+    borderColor: '#E5E5EA',
+    borderRadius: 8,
+    borderWidth: 1,
+    marginBottom: 18,
+    padding: 16,
+  },
+  sectionHeader: {
+    marginBottom: 12,
+  },
+  adminCreateGrid: {
+    gap: 12,
+  },
+  adminCreateGridWide: {
+    flexDirection: 'row',
+  },
+  createBox: {
+    backgroundColor: '#FFFFFF',
+    borderColor: '#E5E5EA',
+    borderRadius: 8,
+    borderWidth: 1,
+    flex: 1,
+    gap: 12,
+    justifyContent: 'space-between',
+    minHeight: 168,
+    padding: 14,
+  },
+  createBody: {
+    gap: 10,
+  },
+  createTitle: {
+    color: '#1D1D1F',
+    fontSize: 16,
+    fontWeight: '900',
+    marginBottom: 10,
+  },
+  choiceGrid: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 8,
+  },
+  choiceButton: {
+    backgroundColor: '#F5F5F7',
+    borderColor: '#D2D2D7',
+    borderRadius: 8,
+    borderWidth: 1,
+    paddingHorizontal: 10,
+    paddingVertical: 8,
+  },
+  choiceButtonActive: {
+    backgroundColor: '#1D1D1F',
+    borderColor: '#1D1D1F',
+  },
+  choiceButtonText: {
+    color: '#1D1D1F',
+    fontSize: 12,
+    fontWeight: '900',
+  },
+  choiceButtonTextActive: {
+    color: '#FFFFFF',
+  },
+  choiceEmpty: {
+    color: '#86868B',
+    fontSize: 13,
+    fontWeight: '800',
+    lineHeight: 19,
+    marginBottom: 12,
+  },
+  formRow: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 8,
+  },
+  formInput: {
+    flex: 1,
+    minWidth: 132,
+  },
+  fieldGroup: {
+    gap: 6,
+  },
+  fieldLabel: {
+    color: '#6E6E73',
+    fontSize: 12,
+    fontWeight: '900',
+  },
+  unitInputWrap: {
+    position: 'relative',
+  },
+  unitText: {
+    color: '#86868B',
+    fontSize: 12,
+    fontWeight: '900',
+    position: 'absolute',
+    right: 12,
+    top: 15,
+  },
+  secondaryButton: {
+    alignItems: 'center',
+    backgroundColor: '#FFFFFF',
+    borderColor: '#1D1D1F',
+    borderRadius: 8,
+    borderWidth: 1,
+    paddingVertical: 12,
+  },
+  secondaryButtonText: {
+    color: '#1D1D1F',
+    fontSize: 14,
+    fontWeight: '900',
+  },
+  disabledOutlineButton: {
+    opacity: 0.45,
   },
   adminColumn: {
     flex: 1,

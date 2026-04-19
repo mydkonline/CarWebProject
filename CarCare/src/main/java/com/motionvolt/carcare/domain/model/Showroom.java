@@ -1,15 +1,15 @@
 package com.motionvolt.carcare.domain.model;
 
-public class Center {
+public class Showroom {
     private int centerId;
     private String centerName;
     private String phoneNumber;
     private String address;
 
-    public Center() {
+    public Showroom() {
     }
 
-    public Center(int centerId, String centerName, String phoneNumber, String address) {
+    public Showroom(int centerId, String centerName, String phoneNumber, String address) {
         this.centerId = centerId;
         this.centerName = centerName;
         this.phoneNumber = phoneNumber;

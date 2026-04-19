@@ -2,14 +2,14 @@ package com.motionvolt.carcare.adapter.out.persistence;
 
 import com.motionvolt.carcare.adapter.out.persistence.entity.CarEntity;
 import com.motionvolt.carcare.adapter.out.persistence.entity.CarOptionEntity;
-import com.motionvolt.carcare.adapter.out.persistence.entity.CenterEntity;
+import com.motionvolt.carcare.adapter.out.persistence.entity.ShowroomEntity;
 import com.motionvolt.carcare.adapter.out.persistence.repository.CarOptionRepository;
 import com.motionvolt.carcare.adapter.out.persistence.repository.CarRepository;
-import com.motionvolt.carcare.adapter.out.persistence.repository.CenterRepository;
+import com.motionvolt.carcare.adapter.out.persistence.repository.ShowroomRepository;
 import com.motionvolt.carcare.application.port.out.CatalogPort;
 import com.motionvolt.carcare.domain.model.CarOption;
-import com.motionvolt.carcare.domain.model.CarSummary;
-import com.motionvolt.carcare.domain.model.Center;
+import com.motionvolt.carcare.domain.model.VehicleSummary;
+import com.motionvolt.carcare.domain.model.Showroom;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -19,18 +19,18 @@ import java.util.stream.Collectors;
 public class JpaCatalogAdapter implements CatalogPort {
     private final CarRepository carRepository;
     private final CarOptionRepository carOptionRepository;
-    private final CenterRepository centerRepository;
+    private final ShowroomRepository showroomRepository;
 
     public JpaCatalogAdapter(CarRepository carRepository,
                              CarOptionRepository carOptionRepository,
-                             CenterRepository centerRepository) {
+                             ShowroomRepository showroomRepository) {
         this.carRepository = carRepository;
         this.carOptionRepository = carOptionRepository;
-        this.centerRepository = centerRepository;
+        this.showroomRepository = showroomRepository;
     }
 
     @Override
-    public List<CarSummary> findCars() {
+    public List<VehicleSummary> findCars() {
         return carRepository.findAllByOrderByIdAsc().stream()
                 .map(this::toCarSummary)
                 .collect(Collectors.toList());
@@ -44,14 +44,14 @@ public class JpaCatalogAdapter implements CatalogPort {
     }
 
     @Override
-    public List<Center> findCenters() {
-        return centerRepository.findAllByOrderByIdAsc().stream()
-                .map(this::toCenter)
+    public List<Showroom> findShowrooms() {
+        return showroomRepository.findAllByOrderByIdAsc().stream()
+                .map(this::toShowroom)
                 .collect(Collectors.toList());
     }
 
-    private CarSummary toCarSummary(CarEntity car) {
-        return new CarSummary(car.getId(), car.getBrand().getName(), car.getName());
+    private VehicleSummary toCarSummary(CarEntity car) {
+        return new VehicleSummary(car.getId(), car.getBrand().getName(), car.getName());
     }
 
     private CarOption toCarOption(CarOptionEntity option) {
@@ -66,7 +66,7 @@ public class JpaCatalogAdapter implements CatalogPort {
         );
     }
 
-    private Center toCenter(CenterEntity center) {
-        return new Center(center.getId(), center.getName(), center.getNumber(), center.getAddress());
+    private Showroom toShowroom(ShowroomEntity center) {
+        return new Showroom(center.getId(), center.getName(), center.getNumber(), center.getAddress());
     }
 }

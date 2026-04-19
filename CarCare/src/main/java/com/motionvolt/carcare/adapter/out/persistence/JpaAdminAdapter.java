@@ -4,15 +4,15 @@ import com.motionvolt.carcare.adapter.out.persistence.entity.AdminAccountEntity;
 import com.motionvolt.carcare.adapter.out.persistence.entity.CarBrandEntity;
 import com.motionvolt.carcare.adapter.out.persistence.entity.CarEntity;
 import com.motionvolt.carcare.adapter.out.persistence.entity.CarOptionEntity;
-import com.motionvolt.carcare.adapter.out.persistence.entity.ScheduleDriveEntity;
+import com.motionvolt.carcare.adapter.out.persistence.entity.TestDriveBookingEntity;
 import com.motionvolt.carcare.adapter.out.persistence.repository.AdminAccountRepository;
 import com.motionvolt.carcare.adapter.out.persistence.repository.CarBrandRepository;
 import com.motionvolt.carcare.adapter.out.persistence.repository.CarOptionRepository;
 import com.motionvolt.carcare.adapter.out.persistence.repository.CarRepository;
-import com.motionvolt.carcare.adapter.out.persistence.repository.ScheduleDriveRepository;
+import com.motionvolt.carcare.adapter.out.persistence.repository.TestDriveBookingRepository;
 import com.motionvolt.carcare.application.port.out.AdminPort;
-import com.motionvolt.carcare.domain.model.DriveSchedule;
-import com.motionvolt.carcare.domain.model.ProductOption;
+import com.motionvolt.carcare.domain.model.TestDriveSchedule;
+import com.motionvolt.carcare.domain.model.AdminVehicleOption;
 import com.motionvolt.carcare.domain.model.SelectionOption;
 import org.springframework.stereotype.Repository;
 
@@ -24,18 +24,18 @@ import java.util.stream.Collectors;
 @Repository
 public class JpaAdminAdapter implements AdminPort {
     private final AdminAccountRepository adminAccountRepository;
-    private final ScheduleDriveRepository scheduleDriveRepository;
+    private final TestDriveBookingRepository testDriveBookingRepository;
     private final CarBrandRepository carBrandRepository;
     private final CarRepository carRepository;
     private final CarOptionRepository carOptionRepository;
 
     public JpaAdminAdapter(AdminAccountRepository adminAccountRepository,
-                           ScheduleDriveRepository scheduleDriveRepository,
+                           TestDriveBookingRepository testDriveBookingRepository,
                            CarBrandRepository carBrandRepository,
                            CarRepository carRepository,
                            CarOptionRepository carOptionRepository) {
         this.adminAccountRepository = adminAccountRepository;
-        this.scheduleDriveRepository = scheduleDriveRepository;
+        this.testDriveBookingRepository = testDriveBookingRepository;
         this.carBrandRepository = carBrandRepository;
         this.carRepository = carRepository;
         this.carOptionRepository = carOptionRepository;
@@ -53,22 +53,22 @@ public class JpaAdminAdapter implements AdminPort {
     }
 
     @Override
-    public List<DriveSchedule> findDriveSchedules() {
-        return scheduleDriveRepository.findAllByOrderByIdAsc().stream()
-                .map(this::toDriveSchedule)
+    public List<TestDriveSchedule> findTestDriveSchedules() {
+        return testDriveBookingRepository.findAllByOrderByIdAsc().stream()
+                .map(this::toTestDriveSchedule)
                 .collect(Collectors.toList());
     }
 
     @Override
-    public DriveSchedule findDriveSchedule(int reservationId) {
-        return scheduleDriveRepository.findById(reservationId)
-                .map(this::toDriveSchedule)
+    public TestDriveSchedule findTestDriveSchedule(int reservationId) {
+        return testDriveBookingRepository.findById(reservationId)
+                .map(this::toTestDriveSchedule)
                 .orElse(null);
     }
 
     @Override
-    public int updateDriveSchedule(int reservationId, DriveSchedule schedule) {
-        Optional<ScheduleDriveEntity> current = scheduleDriveRepository.findById(reservationId);
+    public int updateTestDriveSchedule(int reservationId, TestDriveSchedule schedule) {
+        Optional<TestDriveBookingEntity> current = testDriveBookingRepository.findById(reservationId);
         if (!current.isPresent()) {
             return 0;
         }
@@ -78,23 +78,23 @@ public class JpaAdminAdapter implements AdminPort {
     }
 
     @Override
-    public int deleteDriveSchedule(int reservationId) {
-        if (!scheduleDriveRepository.existsById(reservationId)) {
+    public int deleteTestDriveSchedule(int reservationId) {
+        if (!testDriveBookingRepository.existsById(reservationId)) {
             return 0;
         }
-        scheduleDriveRepository.deleteById(reservationId);
+        testDriveBookingRepository.deleteById(reservationId);
         return 1;
     }
 
     @Override
-    public List<ProductOption> findProducts() {
+    public List<AdminVehicleOption> findAdminVehicleOptions() {
         return carOptionRepository.findAllByOrderByIdAsc().stream()
-                .map(this::toProductOption)
+                .map(this::toAdminVehicleOption)
                 .collect(Collectors.toList());
     }
 
     @Override
-    public int deleteProductOption(int optionId) {
+    public int deleteAdminVehicleOption(int optionId) {
         if (!carOptionRepository.existsById(optionId)) {
             return 0;
         }
@@ -116,7 +116,7 @@ public class JpaAdminAdapter implements AdminPort {
     }
 
     @Override
-    public int createCarOption(int carId, String color, int cc, int km, double price, String grade) {
+    public int createVehicleOption(int carId, String color, int cc, int km, double price, String grade) {
         CarEntity car = carRepository.getReferenceById(carId);
         carOptionRepository.save(new CarOptionEntity(car, color, cc, km, BigDecimal.valueOf(price), grade));
         return 1;
@@ -136,9 +136,9 @@ public class JpaAdminAdapter implements AdminPort {
                 .collect(Collectors.toList());
     }
 
-    private DriveSchedule toDriveSchedule(ScheduleDriveEntity schedule) {
+    private TestDriveSchedule toTestDriveSchedule(TestDriveBookingEntity schedule) {
         CarOptionEntity option = schedule.getCarOption();
-        return new DriveSchedule(
+        return new TestDriveSchedule(
                 schedule.getId(),
                 option.getId(),
                 schedule.getReservationDate(),
@@ -149,13 +149,13 @@ public class JpaAdminAdapter implements AdminPort {
                 option.getGrade(),
                 option.getKm(),
                 option.getPrice().doubleValue(),
-                schedule.isState() ? DriveSchedule.States.RESERVED : DriveSchedule.States.FAILED
+                schedule.isState() ? TestDriveSchedule.States.RESERVED : TestDriveSchedule.States.FAILED
         );
     }
 
-    private ProductOption toProductOption(CarOptionEntity option) {
+    private AdminVehicleOption toAdminVehicleOption(CarOptionEntity option) {
         CarEntity car = option.getCar();
-        return new ProductOption(
+        return new AdminVehicleOption(
                 option.getId(),
                 car.getId(),
                 car.getBrand().getName(),

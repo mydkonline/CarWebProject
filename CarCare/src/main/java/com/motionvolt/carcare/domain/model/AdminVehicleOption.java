@@ -1,6 +1,6 @@
 package com.motionvolt.carcare.domain.model;
 
-public class ProductOption {
+public class AdminVehicleOption {
     private int optionId;
     private int carId;
     private String brandName;
@@ -11,10 +11,10 @@ public class ProductOption {
     private double price;
     private String grade;
 
-    public ProductOption() {
+    public AdminVehicleOption() {
     }
 
-    public ProductOption(int optionId, int carId, String brandName, String modelName, String color, int cc, int km, double price,
+    public AdminVehicleOption(int optionId, int carId, String brandName, String modelName, String color, int cc, int km, double price,
                          String grade) {
         this.optionId = optionId;
         this.carId = carId;

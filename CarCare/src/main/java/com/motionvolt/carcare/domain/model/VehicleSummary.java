@@ -1,14 +1,14 @@
 package com.motionvolt.carcare.domain.model;
 
-public class CarSummary {
+public class VehicleSummary {
     private int carId;
     private String brandName;
     private String modelName;
 
-    public CarSummary() {
+    public VehicleSummary() {
     }
 
-    public CarSummary(int carId, String brandName, String modelName) {
+    public VehicleSummary(int carId, String brandName, String modelName) {
         this.carId = carId;
         this.brandName = brandName;
         this.modelName = modelName;

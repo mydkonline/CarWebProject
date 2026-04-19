@@ -3,7 +3,7 @@ package com.motionvolt.carcare.application.service;
 import com.motionvolt.carcare.application.port.in.ReservationUseCase;
 import com.motionvolt.carcare.application.port.out.ReservationPort;
 import com.motionvolt.carcare.domain.model.ReservationAvailability;
-import com.motionvolt.carcare.domain.model.TestDriveReservation;
+import com.motionvolt.carcare.domain.model.TestDriveBooking;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -28,7 +28,7 @@ public class ReservationService implements ReservationUseCase {
         if (!isAvailable(carOptionId, reservationDate)) {
             return false;
         }
-        TestDriveReservation reservation = new TestDriveReservation(centerId, kakaoUserId, carOptionId, reservationDate);
+        TestDriveBooking reservation = new TestDriveBooking(centerId, kakaoUserId, carOptionId, reservationDate);
         return reservationPort.saveReservation(reservation) > 0;
     }
 

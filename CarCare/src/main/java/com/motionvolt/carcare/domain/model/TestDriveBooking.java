@@ -2,7 +2,7 @@ package com.motionvolt.carcare.domain.model;
 
 import java.time.LocalDate;
 
-public class TestDriveReservation {
+public class TestDriveBooking {
     
     private int centerId;
     private long kakaoUserId;
@@ -10,7 +10,7 @@ public class TestDriveReservation {
     private LocalDate reservationDate;
     private boolean state;
 
-    public TestDriveReservation(int centerId, long kakaoUserId, int carOptionId, LocalDate reservationDate) {
+    public TestDriveBooking(int centerId, long kakaoUserId, int carOptionId, LocalDate reservationDate) {
         this.centerId = centerId;
         this.kakaoUserId = kakaoUserId;
         this.carOptionId = carOptionId;

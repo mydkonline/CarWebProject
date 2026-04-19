@@ -2,8 +2,8 @@ package com.motionvolt.carcare.adapter.in.api;
 
 import com.motionvolt.carcare.application.port.in.CatalogUseCase;
 import com.motionvolt.carcare.domain.model.CarOption;
-import com.motionvolt.carcare.domain.model.CarSummary;
-import com.motionvolt.carcare.domain.model.Center;
+import com.motionvolt.carcare.domain.model.VehicleSummary;
+import com.motionvolt.carcare.domain.model.Showroom;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -24,7 +24,7 @@ public class CatalogApiController {
 
     // React Native is a separate client, so it reads catalog data as JSON instead of Thymeleaf pages.
     @GetMapping("/cars")
-    public List<CarSummary> cars() {
+    public List<VehicleSummary> cars() {
         return catalogUseCase.getCars();
     }
 
@@ -34,7 +34,7 @@ public class CatalogApiController {
     }
 
     @GetMapping("/options/{optionId}/centers")
-    public List<Center> centers(@PathVariable int optionId) {
-        return catalogUseCase.getCenters();
+    public List<Showroom> centers(@PathVariable int optionId) {
+        return catalogUseCase.getShowrooms();
     }
 }

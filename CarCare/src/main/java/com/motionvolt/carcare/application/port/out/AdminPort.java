@@ -1,7 +1,7 @@
 package com.motionvolt.carcare.application.port.out;
 
-import com.motionvolt.carcare.domain.model.DriveSchedule;
-import com.motionvolt.carcare.domain.model.ProductOption;
+import com.motionvolt.carcare.domain.model.TestDriveSchedule;
+import com.motionvolt.carcare.domain.model.AdminVehicleOption;
 import com.motionvolt.carcare.domain.model.SelectionOption;
 
 import java.util.List;
@@ -11,23 +11,23 @@ public interface AdminPort {
 
     int createAdmin(String id, String username, String password);
 
-    List<DriveSchedule> findDriveSchedules();
+    List<TestDriveSchedule> findTestDriveSchedules();
 
-    DriveSchedule findDriveSchedule(int reservationId);
+    TestDriveSchedule findTestDriveSchedule(int reservationId);
 
-    int updateDriveSchedule(int reservationId, DriveSchedule schedule);
+    int updateTestDriveSchedule(int reservationId, TestDriveSchedule schedule);
 
-    int deleteDriveSchedule(int reservationId);
+    int deleteTestDriveSchedule(int reservationId);
 
-    List<ProductOption> findProducts();
+    List<AdminVehicleOption> findAdminVehicleOptions();
 
-    int deleteProductOption(int optionId);
+    int deleteAdminVehicleOption(int optionId);
 
     int createBrand(String name);
 
     int createModel(int brandId, String name);
 
-    int createCarOption(int carId, String color, int cc, int km, double price, String grade);
+    int createVehicleOption(int carId, String color, int cc, int km, double price, String grade);
 
     List<SelectionOption> findBrands();
 

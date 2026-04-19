@@ -2,8 +2,8 @@ package com.motionvolt.carcare.application.service;
 
 import com.motionvolt.carcare.application.port.in.AdminUseCase;
 import com.motionvolt.carcare.application.port.out.AdminPort;
-import com.motionvolt.carcare.domain.model.DriveSchedule;
-import com.motionvolt.carcare.domain.model.ProductOption;
+import com.motionvolt.carcare.domain.model.TestDriveSchedule;
+import com.motionvolt.carcare.domain.model.AdminVehicleOption;
 import com.motionvolt.carcare.domain.model.SelectionOption;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -41,49 +41,49 @@ public class AdminService implements AdminUseCase {
 
     @Override
     @Transactional(readOnly = true)
-    public List<DriveSchedule> getDriveSchedules() {
-        return adminPort.findDriveSchedules();
+    public List<TestDriveSchedule> getTestDriveSchedules() {
+        return adminPort.findTestDriveSchedules();
     }
 
     @Override
     @Transactional(readOnly = true)
-    public List<DriveSchedule> searchDriveSchedules(String keyword) {
+    public List<TestDriveSchedule> searchTestDriveSchedules(String keyword) {
         String normalized = keyword == null ? "" : keyword.toLowerCase();
-        return getDriveSchedules().stream()
+        return getTestDriveSchedules().stream()
                 .filter(schedule -> schedule.getCustomerName() != null && schedule.getCustomerName().toLowerCase().contains(normalized))
                 .collect(Collectors.toList());
     }
 
     @Override
     @Transactional(readOnly = true)
-    public DriveSchedule getDriveSchedule(int reservationId) {
-        return adminPort.findDriveSchedule(reservationId);
+    public TestDriveSchedule getTestDriveSchedule(int reservationId) {
+        return adminPort.findTestDriveSchedule(reservationId);
     }
 
     @Override
     @Transactional
-    public boolean updateDriveSchedule(int reservationId, int optionId, LocalDate reservationDate, String modelName, String customerName,
-                                       DriveSchedule.States state) {
-        DriveSchedule schedule = new DriveSchedule(reservationId, optionId, reservationDate, modelName, customerName, 0, null, null, 0, 0, state);
-        return adminPort.updateDriveSchedule(reservationId, schedule) > 0;
+    public boolean updateTestDriveSchedule(int reservationId, int optionId, LocalDate reservationDate, String modelName, String customerName,
+                                       TestDriveSchedule.States state) {
+        TestDriveSchedule schedule = new TestDriveSchedule(reservationId, optionId, reservationDate, modelName, customerName, 0, null, null, 0, 0, state);
+        return adminPort.updateTestDriveSchedule(reservationId, schedule) > 0;
     }
 
     @Override
     @Transactional
-    public boolean deleteDriveSchedule(int reservationId) {
-        return adminPort.deleteDriveSchedule(reservationId) > 0;
+    public boolean deleteTestDriveSchedule(int reservationId) {
+        return adminPort.deleteTestDriveSchedule(reservationId) > 0;
     }
 
     @Override
     @Transactional(readOnly = true)
-    public List<ProductOption> getProducts() {
-        return adminPort.findProducts();
+    public List<AdminVehicleOption> getAdminVehicleOptions() {
+        return adminPort.findAdminVehicleOptions();
     }
 
     @Override
     @Transactional
-    public boolean deleteProductOption(int optionId) {
-        return adminPort.deleteProductOption(optionId) > 0;
+    public boolean deleteAdminVehicleOption(int optionId) {
+        return adminPort.deleteAdminVehicleOption(optionId) > 0;
     }
 
     @Override
@@ -100,8 +100,8 @@ public class AdminService implements AdminUseCase {
 
     @Override
     @Transactional
-    public int createCarOption(int carId, String color, int cc, int km, double price, String grade) {
-        return adminPort.createCarOption(carId, color, cc, km, price, grade);
+    public int createVehicleOption(int carId, String color, int cc, int km, double price, String grade) {
+        return adminPort.createVehicleOption(carId, color, cc, km, price, grade);
     }
 
     @Override

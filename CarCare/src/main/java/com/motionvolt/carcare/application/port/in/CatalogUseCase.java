@@ -1,15 +1,15 @@
 package com.motionvolt.carcare.application.port.in;
 
 import com.motionvolt.carcare.domain.model.CarOption;
-import com.motionvolt.carcare.domain.model.CarSummary;
-import com.motionvolt.carcare.domain.model.Center;
+import com.motionvolt.carcare.domain.model.VehicleSummary;
+import com.motionvolt.carcare.domain.model.Showroom;
 
 import java.util.List;
 
 public interface CatalogUseCase {
-    List<CarSummary> getCars();
+    List<VehicleSummary> getCars();
 
     List<CarOption> getOptions(int carId);
 
-    List<Center> getCenters();
+    List<Showroom> getShowrooms();
 }

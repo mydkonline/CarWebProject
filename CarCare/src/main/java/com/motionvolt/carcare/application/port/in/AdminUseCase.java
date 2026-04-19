@@ -1,7 +1,7 @@
 package com.motionvolt.carcare.application.port.in;
 
-import com.motionvolt.carcare.domain.model.DriveSchedule;
-import com.motionvolt.carcare.domain.model.ProductOption;
+import com.motionvolt.carcare.domain.model.TestDriveSchedule;
+import com.motionvolt.carcare.domain.model.AdminVehicleOption;
 import com.motionvolt.carcare.domain.model.SelectionOption;
 
 import java.time.LocalDate;
@@ -12,26 +12,26 @@ public interface AdminUseCase {
 
     boolean createAdmin(String username, String password);
 
-    List<DriveSchedule> getDriveSchedules();
+    List<TestDriveSchedule> getTestDriveSchedules();
 
-    List<DriveSchedule> searchDriveSchedules(String keyword);
+    List<TestDriveSchedule> searchTestDriveSchedules(String keyword);
 
-    DriveSchedule getDriveSchedule(int reservationId);
+    TestDriveSchedule getTestDriveSchedule(int reservationId);
 
-    boolean updateDriveSchedule(int reservationId, int optionId, LocalDate reservationDate, String modelName,
-                                String customerName, DriveSchedule.States state);
+    boolean updateTestDriveSchedule(int reservationId, int optionId, LocalDate reservationDate, String modelName,
+                                String customerName, TestDriveSchedule.States state);
 
-    boolean deleteDriveSchedule(int reservationId);
+    boolean deleteTestDriveSchedule(int reservationId);
 
-    List<ProductOption> getProducts();
+    List<AdminVehicleOption> getAdminVehicleOptions();
 
-    boolean deleteProductOption(int optionId);
+    boolean deleteAdminVehicleOption(int optionId);
 
     int createBrand(String name);
 
     int createModel(int brandId, String name);
 
-    int createCarOption(int carId, String color, int cc, int km, double price, String grade);
+    int createVehicleOption(int carId, String color, int cc, int km, double price, String grade);
 
     List<SelectionOption> getBrands();
 

@@ -1,16 +1,16 @@
 package com.motionvolt.carcare.adapter.out.persistence;
 
 import com.motionvolt.carcare.adapter.out.persistence.entity.CarOptionEntity;
-import com.motionvolt.carcare.adapter.out.persistence.entity.CenterEntity;
+import com.motionvolt.carcare.adapter.out.persistence.entity.ShowroomEntity;
 import com.motionvolt.carcare.adapter.out.persistence.entity.KakaoUserEntity;
-import com.motionvolt.carcare.adapter.out.persistence.entity.ScheduleDriveEntity;
+import com.motionvolt.carcare.adapter.out.persistence.entity.TestDriveBookingEntity;
 import com.motionvolt.carcare.adapter.out.persistence.repository.CarOptionRepository;
-import com.motionvolt.carcare.adapter.out.persistence.repository.CenterRepository;
+import com.motionvolt.carcare.adapter.out.persistence.repository.ShowroomRepository;
 import com.motionvolt.carcare.adapter.out.persistence.repository.KakaoUserRepository;
-import com.motionvolt.carcare.adapter.out.persistence.repository.ScheduleDriveRepository;
+import com.motionvolt.carcare.adapter.out.persistence.repository.TestDriveBookingRepository;
 import com.motionvolt.carcare.application.port.out.ReservationPort;
 import com.motionvolt.carcare.domain.model.KakaoUser;
-import com.motionvolt.carcare.domain.model.TestDriveReservation;
+import com.motionvolt.carcare.domain.model.TestDriveBooking;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
@@ -18,18 +18,18 @@ import java.time.LocalDate;
 @Repository
 public class JpaReservationAdapter implements ReservationPort {
     private final KakaoUserRepository kakaoUserRepository;
-    private final CenterRepository centerRepository;
+    private final ShowroomRepository showroomRepository;
     private final CarOptionRepository carOptionRepository;
-    private final ScheduleDriveRepository scheduleDriveRepository;
+    private final TestDriveBookingRepository testDriveBookingRepository;
 
     public JpaReservationAdapter(KakaoUserRepository kakaoUserRepository,
-                                 CenterRepository centerRepository,
+                                 ShowroomRepository showroomRepository,
                                  CarOptionRepository carOptionRepository,
-                                 ScheduleDriveRepository scheduleDriveRepository) {
+                                 TestDriveBookingRepository testDriveBookingRepository) {
         this.kakaoUserRepository = kakaoUserRepository;
-        this.centerRepository = centerRepository;
+        this.showroomRepository = showroomRepository;
         this.carOptionRepository = carOptionRepository;
-        this.scheduleDriveRepository = scheduleDriveRepository;
+        this.testDriveBookingRepository = testDriveBookingRepository;
     }
 
     @Override
@@ -44,11 +44,11 @@ public class JpaReservationAdapter implements ReservationPort {
     }
 
     @Override
-    public int saveReservation(TestDriveReservation reservation) {
-        CenterEntity center = centerRepository.getReferenceById(reservation.getCenterId());
+    public int saveReservation(TestDriveBooking reservation) {
+        ShowroomEntity center = showroomRepository.getReferenceById(reservation.getCenterId());
         KakaoUserEntity kakaoUser = kakaoUserRepository.getReferenceById(reservation.getKakaoUserId());
         CarOptionEntity carOption = carOptionRepository.getReferenceById(reservation.getCarOptionId());
-        scheduleDriveRepository.save(new ScheduleDriveEntity(
+        testDriveBookingRepository.save(new TestDriveBookingEntity(
                 center,
                 kakaoUser,
                 carOption,
@@ -60,6 +60,6 @@ public class JpaReservationAdapter implements ReservationPort {
 
     @Override
     public boolean existsReservedSchedule(int carOptionId, LocalDate reservationDate) {
-        return scheduleDriveRepository.existsByCarOption_IdAndReservationDateAndStateTrue(carOptionId, reservationDate);
+        return testDriveBookingRepository.existsByCarOption_IdAndReservationDateAndStateTrue(carOptionId, reservationDate);
     }
 }

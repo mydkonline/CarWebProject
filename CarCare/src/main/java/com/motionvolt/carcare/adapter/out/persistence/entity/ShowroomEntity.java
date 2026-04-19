@@ -9,7 +9,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "centers")
-public class CenterEntity {
+public class ShowroomEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
@@ -23,7 +23,7 @@ public class CenterEntity {
     @Column(nullable = false, length = 40)
     private String number;
 
-    protected CenterEntity() {
+    protected ShowroomEntity() {
     }
 
     public Integer getId() {

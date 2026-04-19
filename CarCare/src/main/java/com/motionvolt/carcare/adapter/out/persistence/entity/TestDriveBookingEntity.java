@@ -14,14 +14,14 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "schedule_drive")
-public class ScheduleDriveEntity {
+public class TestDriveBookingEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "center_id", nullable = false)
-    private CenterEntity center;
+    private ShowroomEntity center;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "kakaouser_id", nullable = false)
@@ -37,10 +37,10 @@ public class ScheduleDriveEntity {
     @Column(nullable = false)
     private boolean state;
 
-    protected ScheduleDriveEntity() {
+    protected TestDriveBookingEntity() {
     }
 
-    public ScheduleDriveEntity(CenterEntity center, KakaoUserEntity kakaoUser, CarOptionEntity carOption,
+    public TestDriveBookingEntity(ShowroomEntity center, KakaoUserEntity kakaoUser, CarOptionEntity carOption,
                                LocalDate reservationDate, boolean state) {
         this.center = center;
         this.kakaoUser = kakaoUser;

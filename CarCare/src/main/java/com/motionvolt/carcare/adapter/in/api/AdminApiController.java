@@ -1,8 +1,9 @@
 package com.motionvolt.carcare.adapter.in.api;
 
 import com.motionvolt.carcare.application.port.in.AdminUseCase;
-import com.motionvolt.carcare.domain.model.DriveSchedule;
-import com.motionvolt.carcare.domain.model.ProductOption;
+import com.motionvolt.carcare.domain.model.TestDriveSchedule;
+import com.motionvolt.carcare.domain.model.AdminVehicleOption;
+import com.motionvolt.carcare.domain.model.SelectionOption;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -36,35 +37,80 @@ public class AdminApiController {
 
     @GetMapping("/summary")
     public AdminSummaryResponse summary() {
-        List<DriveSchedule> reservations = adminUseCase.getDriveSchedules();
+        List<TestDriveSchedule> reservations = adminUseCase.getTestDriveSchedules();
         long reservedCount = reservations.stream()
-                .filter(reservation -> reservation.getState() == DriveSchedule.States.RESERVED)
+                .filter(reservation -> reservation.getState() == TestDriveSchedule.States.RESERVED)
                 .count();
         long failedCount = reservations.size() - reservedCount;
 
-        return new AdminSummaryResponse(reservations.size(), reservedCount, failedCount, adminUseCase.getProducts().size());
+        return new AdminSummaryResponse(reservations.size(), reservedCount, failedCount, adminUseCase.getAdminVehicleOptions().size());
     }
 
     @GetMapping("/reservations")
-    public List<DriveSchedule> reservations() {
-        return adminUseCase.getDriveSchedules();
+    public List<TestDriveSchedule> reservations() {
+        return adminUseCase.getTestDriveSchedules();
     }
 
     @GetMapping("/products")
-    public List<ProductOption> products() {
-        return adminUseCase.getProducts();
+    public List<AdminVehicleOption> products() {
+        return adminUseCase.getAdminVehicleOptions();
+    }
+
+    @GetMapping("/brands")
+    public List<SelectionOption> brands() {
+        return adminUseCase.getBrands();
+    }
+
+    @GetMapping("/models")
+    public List<SelectionOption> models() {
+        return adminUseCase.getModels();
+    }
+
+    @PostMapping("/brands")
+    public ResponseEntity<ApiResponse> createBrand(@RequestBody NameCreateRequest request) {
+        if (request.isBlank()) {
+            return ResponseEntity.badRequest().body(ApiResponse.of(false, "브랜드명을 입력해 주세요."));
+        }
+        adminUseCase.createBrand(request.getName().trim());
+        return ResponseEntity.status(201).body(ApiResponse.of(true, "브랜드가 생성되었습니다."));
+    }
+
+    @PostMapping("/models")
+    public ResponseEntity<ApiResponse> createModel(@RequestBody ModelCreateRequest request) {
+        if (request.getBrandId() == null || request.isBlank()) {
+            return ResponseEntity.badRequest().body(ApiResponse.of(false, "브랜드와 모델명을 확인해 주세요."));
+        }
+        adminUseCase.createModel(request.getBrandId(), request.getName().trim());
+        return ResponseEntity.status(201).body(ApiResponse.of(true, "모델이 생성되었습니다."));
+    }
+
+    @PostMapping("/vehicle-options")
+    public ResponseEntity<ApiResponse> createVehicleOption(@RequestBody VehicleOptionCreateRequest request) {
+        String validationMessage = request.validate();
+        if (validationMessage != null) {
+            return ResponseEntity.badRequest().body(ApiResponse.of(false, validationMessage));
+        }
+        adminUseCase.createVehicleOption(
+                request.getCarId(),
+                request.getColor().trim(),
+                request.getCc(),
+                request.getKm(),
+                request.getPrice(),
+                request.getGrade().trim()
+        );
+        return ResponseEntity.status(201).body(ApiResponse.of(true, "트림 옵션이 생성되었습니다."));
     }
 
     @PatchMapping("/reservations/{reservationId}")
     public ResponseEntity<ApiResponse> updateReservation(@PathVariable int reservationId,
                                                          @RequestBody ReservationUpdateRequest request) {
-        DriveSchedule current = adminUseCase.getDriveSchedule(reservationId);
+        TestDriveSchedule current = adminUseCase.getTestDriveSchedule(reservationId);
         if (current == null) {
             return ResponseEntity.status(404).body(ApiResponse.of(false, "예약을 찾지 못했습니다."));
         }
 
-        DriveSchedule.States state = request.getState() == null ? current.getState() : request.getState();
-        boolean updated = adminUseCase.updateDriveSchedule(
+        TestDriveSchedule.States state = request.getState() == null ? current.getState() : request.getState();
+        boolean updated = adminUseCase.updateTestDriveSchedule(
                 reservationId,
                 current.getOptionId(),
                 request.getReservationDate() == null ? current.getReservationDate() : request.getReservationDate(),
@@ -127,9 +173,120 @@ public class AdminApiController {
         }
     }
 
+    public static class NameCreateRequest {
+        private String name;
+
+        public String getName() {
+            return name;
+        }
+
+        public void setName(String name) {
+            this.name = name;
+        }
+
+        protected boolean isBlank() {
+            return name == null || name.trim().isEmpty();
+        }
+    }
+
+    public static class ModelCreateRequest extends NameCreateRequest {
+        private Integer brandId;
+
+        public Integer getBrandId() {
+            return brandId;
+        }
+
+        public void setBrandId(Integer brandId) {
+            this.brandId = brandId;
+        }
+    }
+
+    public static class VehicleOptionCreateRequest {
+        private Integer carId;
+        private String color;
+        private Integer cc;
+        private Integer km;
+        private Double price;
+        private String grade;
+
+        public Integer getCarId() {
+            return carId;
+        }
+
+        public void setCarId(Integer carId) {
+            this.carId = carId;
+        }
+
+        public String getColor() {
+            return color;
+        }
+
+        public void setColor(String color) {
+            this.color = color;
+        }
+
+        public Integer getCc() {
+            return cc;
+        }
+
+        public void setCc(Integer cc) {
+            this.cc = cc;
+        }
+
+        public Integer getKm() {
+            return km;
+        }
+
+        public void setKm(Integer km) {
+            this.km = km;
+        }
+
+        public Double getPrice() {
+            return price;
+        }
+
+        public void setPrice(Double price) {
+            this.price = price;
+        }
+
+        public String getGrade() {
+            return grade;
+        }
+
+        public void setGrade(String grade) {
+            this.grade = grade;
+        }
+
+        private String validate() {
+            if (carId == null) {
+                return "모델을 선택해 주세요.";
+            }
+            if (isBlank(color)) {
+                return "색상을 입력해 주세요.";
+            }
+            if (cc == null || cc < 0) {
+                return "배기량을 확인해 주세요.";
+            }
+            if (km == null || km < 0) {
+                return "연비를 확인해 주세요.";
+            }
+            if (price == null || price < 0) {
+                return "가격을 확인해 주세요.";
+            }
+            if (isBlank(grade)) {
+                return "트림명을 입력해 주세요.";
+            }
+            return null;
+        }
+
+        private boolean isBlank(String value) {
+            return value == null || value.trim().isEmpty();
+        }
+    }
+
     public static class ReservationUpdateRequest {
         private java.time.LocalDate reservationDate;
-        private DriveSchedule.States state;
+        private TestDriveSchedule.States state;
 
         public java.time.LocalDate getReservationDate() {
             return reservationDate;
@@ -139,11 +296,11 @@ public class AdminApiController {
             this.reservationDate = reservationDate;
         }
 
-        public DriveSchedule.States getState() {
+        public TestDriveSchedule.States getState() {
             return state;
         }
 
-        public void setState(DriveSchedule.States state) {
+        public void setState(TestDriveSchedule.States state) {
             this.state = state;
         }
     }
